@@ -201,10 +201,11 @@ body {
 
 /* Base Selection */
 .base-options {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+    gap: 16px;
+    justify-items: center;
+    margin-top: 16px;
 }
 
 .base-option {
