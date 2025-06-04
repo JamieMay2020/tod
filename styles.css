@@ -555,8 +555,8 @@ body {
     left: -8px;
     width: 32px;
     height: 32px;
-    background: linear-gradient(to bottom, #FFF200 0%, #FFC20E 100%);
-    border: 2px solid #B8860B;
+    background: linear-gradient(to bottom, #E0E0E0 0%, #A0A0A0 100%);
+    border: 2px solid #606060;
     border-radius: 50%;
     display: flex;
     align-items: center;
