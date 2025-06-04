@@ -8,10 +8,10 @@ let drawingHistory = [];
 let currentPath = [];
 let baseImage = null;
 
-// Rate Limiting
+// Rate Limiting (for fallback)
 let createdTods = [];
 const RATE_LIMIT = 3;
-const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_WINDOW = 60000;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,9 +29,8 @@ function setupBaseSelection() {
     baseOptions.forEach(option => {
         option.addEventListener('click', () => {
             selectedBase = option.dataset.base;
-            const imgElement = option.querySelector('img');
-            baseImage = imgElement.src;
-            
+            baseImage = option.querySelector('img').src;
+
             document.getElementById('baseSelectionModal').classList.remove('active');
             document.getElementById('drawingInterface').classList.remove('hidden');
             initializeCanvas();
@@ -39,112 +38,83 @@ function setupBaseSelection() {
     });
 }
 
-// Drawing Tools Setup
+// Drawing Tools
 function setupDrawingTools() {
     const brushSize = document.getElementById('brushSize');
-    const undoBtn = document.getElementById('undoBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const completeBtn = document.getElementById('completeBtn');
-    const pencilTool = document.getElementById('pencilTool');
-    const brushTool = document.getElementById('brushTool');
+    brushSize.addEventListener('change', (e) => currentSize = parseInt(e.target.value));
 
-    brushSize.addEventListener('change', (e) => {
-        currentSize = parseInt(e.target.value);
+    document.getElementById('undoBtn').addEventListener('click', undo);
+    document.getElementById('clearBtn').addEventListener('click', clearCanvas);
+    document.getElementById('completeBtn').addEventListener('click', completeTod);
+
+    const pencil = document.getElementById('pencilTool');
+    const brush = document.getElementById('brushTool');
+
+    pencil.addEventListener('click', () => {
+        pencil.classList.add('active');
+        brush.classList.remove('active');
     });
 
-    undoBtn.addEventListener('click', undo);
-    clearBtn.addEventListener('click', clearCanvas);
-    completeBtn.addEventListener('click', completeTod);
-
-    // Tool selection
-    pencilTool.addEventListener('click', () => {
-        pencilTool.classList.add('active');
-        brushTool.classList.remove('active');
+    brush.addEventListener('click', () => {
+        brush.classList.add('active');
+        pencil.classList.remove('active');
     });
 
-    brushTool.addEventListener('click', () => {
-        brushTool.classList.add('active');
-        pencilTool.classList.remove('active');
-    });
-
-    // Set pencil as default
-    pencilTool.classList.add('active');
+    pencil.classList.add('active');
 }
 
-// Color Palette Setup
+// Color Palette
 function setupColorPalette() {
-    const colorBoxes = document.querySelectorAll('.color-box');
-    const currentColorDisplay = document.getElementById('currentColor');
+    const boxes = document.querySelectorAll('.color-box');
+    const display = document.getElementById('currentColor');
 
-    colorBoxes.forEach(box => {
+    boxes.forEach(box => {
         box.addEventListener('click', () => {
-            // Remove previous selection
-            document.querySelectorAll('.color-box').forEach(cb => cb.classList.remove('selected'));
-            
-            // Select new color
+            boxes.forEach(cb => cb.classList.remove('selected'));
             box.classList.add('selected');
             currentColor = box.dataset.color;
-            currentColorDisplay.style.backgroundColor = currentColor;
+            display.style.backgroundColor = currentColor;
         });
     });
 
-    // Set initial color
-    currentColorDisplay.style.backgroundColor = currentColor;
-    colorBoxes[0].classList.add('selected');
+    display.style.backgroundColor = currentColor;
+    boxes[0].classList.add('selected');
 }
 
 // Canvas Setup
 function setupCanvas() {
     canvas = document.getElementById('drawingCanvas');
     ctx = canvas.getContext('2d');
-    
     canvas.width = 500;
     canvas.height = 500;
-    
-    // Mouse events
+
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseout', stopDrawing);
-    
-    // Touch events for mobile
     canvas.addEventListener('touchstart', handleTouch);
     canvas.addEventListener('touchmove', handleTouch);
     canvas.addEventListener('touchend', stopDrawing);
-
-    // Coordinate tracking
     canvas.addEventListener('mousemove', updateCoordinates);
 }
 
 // Update coordinates display
 function updateCoordinates(e) {
     if (!canvas) return;
-    
     const rect = canvas.getBoundingClientRect();
-    let x = 0, y = 0;
-    
-    if (e) {
-        x = Math.floor(e.clientX - rect.left);
-        y = Math.floor(e.clientY - rect.top);
-    }
-    
-    const coordDisplay = document.getElementById('coordinates');
-    if (coordDisplay) {
-        coordDisplay.textContent = `${x}, ${y}`;
-    }
+    const x = e ? Math.floor(e.clientX - rect.left) : 0;
+    const y = e ? Math.floor(e.clientY - rect.top) : 0;
+    document.getElementById('coordinates').textContent = `${x}, ${y}`;
 }
 
-// Initialize Canvas with Base
+// Initialize Canvas
 function initializeCanvas() {
-    // Clear canvas to white
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Load and draw the base image
+
     if (baseImage) {
         const img = new Image();
-        img.onload = function() {
-            // Center the image on canvas
+        img.onload = () => {
             const x = (canvas.width - img.width) / 2;
             const y = (canvas.height - img.height) / 2;
             ctx.drawImage(img, x, y);
@@ -154,15 +124,13 @@ function initializeCanvas() {
     }
 }
 
-// Drawing Functions
+// Drawing
 function startDrawing(e) {
     isDrawing = true;
     currentPath = [];
-    
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
     ctx.beginPath();
     ctx.moveTo(x, y);
     currentPath.push({x, y, color: currentColor, size: currentSize});
@@ -170,55 +138,44 @@ function startDrawing(e) {
 
 function draw(e) {
     if (!isDrawing) return;
-    
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     ctx.lineWidth = currentSize;
     ctx.strokeStyle = currentColor;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    
     ctx.lineTo(x, y);
     ctx.stroke();
-    
+
     currentPath.push({x, y, color: currentColor, size: currentSize});
 }
 
 function stopDrawing() {
-    if (!isDrawing) return;
-    
-    isDrawing = false;
-    if (currentPath.length > 0) {
+    if (isDrawing && currentPath.length > 0) {
         drawingHistory.push([...currentPath]);
         currentPath = [];
     }
+    isDrawing = false;
 }
 
-// Touch handling
 function handleTouch(e) {
     e.preventDefault();
     const touch = e.touches[0];
-    const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
-                                     e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+    const type = e.type === 'touchstart' ? 'mousedown' : e.type === 'touchmove' ? 'mousemove' : 'mouseup';
+    canvas.dispatchEvent(new MouseEvent(type, {
         clientX: touch.clientX,
         clientY: touch.clientY
-    });
-    canvas.dispatchEvent(mouseEvent);
+    }));
 }
 
-// Canvas State Management
-function saveCanvasState() {
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    return imageData;
-}
-
+// Undo / Clear
 function undo() {
-    if (drawingHistory.length === 0) return;
-    
-    drawingHistory.pop();
-    redrawCanvas();
+    if (drawingHistory.length > 0) {
+        drawingHistory.pop();
+        redrawCanvas();
+    }
 }
 
 function clearCanvas() {
@@ -229,17 +186,12 @@ function clearCanvas() {
 }
 
 function redrawCanvas() {
-    // Reset to base
     initializeCanvas();
-    
-    // Wait for base image to load, then redraw paths
     setTimeout(() => {
         drawingHistory.forEach(path => {
             if (path.length === 0) return;
-            
             ctx.beginPath();
             ctx.moveTo(path[0].x, path[0].y);
-            
             for (let i = 1; i < path.length; i++) {
                 ctx.lineWidth = path[i].size;
                 ctx.strokeStyle = path[i].color;
@@ -252,51 +204,42 @@ function redrawCanvas() {
     }, 100);
 }
 
-// Complete Tod
-    const allowed = await checkRateLimit();
-    if (!allowed) {
-        showRateLimitWarning();
-        return;
-    }
+// Modal Setup
+function setupModals() {
+    const cancel = document.getElementById('cancelBtn');
+    const submit = document.getElementById('submitBtn');
+    const input = document.getElementById('todName');
 
-    
+    cancel.addEventListener('click', () => {
+        document.getElementById('completionModal').classList.remove('active');
+        input.value = '';
+    });
+
+    submit.addEventListener('click', submitTod);
+    input.addEventListener('keypress', e => {
+        if (e.key === 'Enter') submitTod();
+    });
+}
+
+// Trigger modal
+function completeTod() {
     document.getElementById('completionModal').classList.add('active');
     document.getElementById('todName').focus();
 }
 
-// Modal Setup
-function setupModals() {
-    const cancelBtn = document.getElementById('cancelBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    const todNameInput = document.getElementById('todName');
-    
-    cancelBtn.addEventListener('click', () => {
-        document.getElementById('completionModal').classList.remove('active');
-        todNameInput.value = '';
-    });
-    
-    submitBtn.addEventListener('click', submitTod);
-    
-    todNameInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            submitTod();
-        }
-    });
-}
-
-// Submit Tod
+// Submit Tod with async rate check
 async function submitTod() {
     const todName = document.getElementById('todName').value.trim();
     const submitBtn = document.getElementById('submitBtn');
-    
+    submitBtn.disabled = true;
+
     if (!todName) {
         alert('Please give your Tod a name!');
+        submitBtn.disabled = false;
         return;
     }
 
-    submitBtn.disabled = true;
-
-    const allowed = await checkRateLimit();
+    const allowed = await checkFirebaseRateLimit();
     if (!allowed) {
         showRateLimitWarning();
         submitBtn.disabled = false;
@@ -306,7 +249,6 @@ async function submitTod() {
     canvas.toBlob(async (blob) => {
         try {
             const result = await createTod(blob, todName, selectedBase);
-
             if (result.success) {
                 createdTods.push(Date.now());
                 document.getElementById('completionModal').classList.remove('active');
@@ -317,37 +259,31 @@ async function submitTod() {
                 alert('Failed to create Tod. Please try again.');
                 submitBtn.disabled = false;
             }
-        } catch (error) {
-            console.error('Error submitting Tod:', error);
+        } catch (err) {
+            console.error(err);
             alert('Error creating Tod. Please check your connection.');
             submitBtn.disabled = false;
         }
     });
 }
 
-// Rate Limiting
-function checkRateLimit() {
-    // Use Firebase rate limit check
-    return checkFirebaseRateLimit();
-}
-
+// Show warning
 function showRateLimitWarning() {
     const warning = document.getElementById('rateLimitWarning');
-    const cooldownTime = document.getElementById('cooldownTime');
-    
-    const oldestTod = Math.min(...createdTods);
-    const timeRemaining = Math.ceil((RATE_LIMIT_WINDOW - (Date.now() - oldestTod)) / 1000);
-    
-    cooldownTime.textContent = timeRemaining;
+    const timeEl = document.getElementById('cooldownTime');
+    const oldest = Math.min(...createdTods);
+    const timeRemaining = Math.ceil((RATE_LIMIT_WINDOW - (Date.now() - oldest)) / 1000);
+
+    timeEl.textContent = timeRemaining;
     warning.classList.remove('hidden');
-    
+
     const interval = setInterval(() => {
-        const remaining = Math.ceil((RATE_LIMIT_WINDOW - (Date.now() - oldestTod)) / 1000);
+        const remaining = Math.ceil((RATE_LIMIT_WINDOW - (Date.now() - oldest)) / 1000);
         if (remaining <= 0) {
             warning.classList.add('hidden');
             clearInterval(interval);
         } else {
-            cooldownTime.textContent = remaining;
+            timeEl.textContent = remaining;
         }
     }, 1000);
 }
