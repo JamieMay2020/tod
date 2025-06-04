@@ -1,144 +1,54 @@
-// Hall of Tods - Top 20 Tods Page
-let topTods = [];
-let userUpvotes = [];
-let unsubscribe = null;
-
-// Initialize
-document.addEventListener('DOMContentLoaded', async () => {
-    // Get user's upvotes from Firebase
-    userUpvotes = await getUserUpvotes();
-    
-    // Set up real-time listener
-    unsubscribe = listenToTopTods((tods) => {
-        topTods = tods;
-        displayTopTods();
-    });
-});
-
-// Clean up listener when leaving page
-window.addEventListener('beforeunload', () => {
-    if (unsubscribe) {
-        unsubscribe();
-    }
-});
-
-// Load top tods from server
-async function loadTopTods() {
-    const topTodsGrid = document.getElementById('topTodsGrid');
-    
-    try {
-        // Fetch top 20 tods from your backend
-        const response = await fetch('/api/tods/top?limit=20');
-        
-        if (response.ok) {
-            const data = await response.json();
-            topTods = data.tods;
-            displayTopTods();
-        }
-    } catch (error) {
-        console.error('Error loading top tods:', error);
-        
-        // Demo data for testing
-        topTods = generateDemoTopTods();
-        displayTopTods();
-    }
-}
-
-// Display top tods with rankings
-function displayTopTods() {
-    const topTodsGrid = document.getElementById('topTodsGrid');
-    topTodsGrid.innerHTML = '';
-    
-    topTods.forEach((tod, index) => {
-        const todCard = createRankedTodCard(tod, index + 1);
-        topTodsGrid.appendChild(todCard);
-    });
-}
-
-// Create ranked tod card
-function createRankedTodCard(tod, rank) {
-    const card = document.createElement('div');
-    card.className = 'tod-card';
-    card.style.position = 'relative';
-    
-    const isUpvoted = userUpvotes.includes(tod.id);
-    
-    // Determine badge class
-    let badgeClass = 'rank-badge';
-    if (rank === 1) badgeClass += ' gold';
-    else if (rank === 2) badgeClass += ' silver';
-    else if (rank === 3) badgeClass += ' bronze';
-    
-    card.innerHTML = `
-        <div class="${badgeClass}">${rank}</div>
-        <img src="${tod.imageUrl}" alt="${tod.name}" class="tod-image">
-        <div class="tod-info">
-            <div class="tod-name">${escapeHtml(tod.name)}</div>
-            <div class="tod-meta">
-                <span class="tod-creator">by ${escapeHtml(tod.creator || 'Anonymous')}</span>
-                <button class="upvote-btn ${isUpvoted ? 'upvoted' : ''}" 
-                        onclick="toggleUpvote('${tod.id}')">
-                    ❤️ ${tod.upvotes}
-                </button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hall of Tods</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-bar-text">Hall of Tods</div>
+            <div class="title-bar-controls">
+                <button class="title-bar-button" aria-label="Minimize">_</button>
+                <button class="title-bar-button" aria-label="Maximize">□</button>
+                <button class="title-bar-button close" aria-label="Close">×</button>
             </div>
         </div>
-    `;
-    
-    return card;
-}
+        <nav class="nav-bar">
+            <a href="index.html" class="nav-button">Create Tod</a>
+            <a href="new-tods.html" class="nav-button">New Tods</a>
+            <a href="hall-of-tods.html" class="nav-button active">Hall of Tods</a>
+            <div class="nav-separator"></div>
+            <a href="https://x.com" target="_blank" class="nav-button">X.com</a>
+            <a href="https://pump.fun" target="_blank" class="nav-button">Pump.fun</a>
+        </nav>
 
-// Toggle upvote (shared with new-tods page)
-async function toggleUpvote(todId) {
-    const isUpvoted = userUpvotes.includes(todId);
-    
-    const result = await toggleUpvoteFirebase(todId, isUpvoted);
-    
-    if (result.success) {
-        if (isUpvoted) {
-            userUpvotes = userUpvotes.filter(id => id !== todId);
-        } else {
-            userUpvotes.push(todId);
-        }
-        
-        // Update will happen automatically through the real-time listener
-    } else {
-        alert('Error updating upvote. Please try again.');
-    }
-}
+        <div class="window-body">
+            <div class="page-container">
+                <div class="page-header">
+                    <h2>Hall of Tods</h2>
+                    <p>The most beloved Tods of all time!</p>
+                </div>
 
-// Escape HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+                <div id="topTodsGrid" class="tods-grid hall-grid">
+                    <!-- Top 20 Tods will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-// Generate demo top tods for testing
-function generateDemoTopTods() {
-    const names = [
-        'Masterpiece Tod', 'Legendary Tod', 'Epic Tod', 'Amazing Tod',
-        'Incredible Tod', 'Fantastic Tod', 'Brilliant Tod', 'Stunning Tod',
-        'Magnificent Tod', 'Spectacular Tod', 'Marvelous Tod', 'Wonderful Tod',
-        'Glorious Tod', 'Superb Tod', 'Excellent Tod', 'Outstanding Tod',
-        'Remarkable Tod', 'Extraordinary Tod', 'Phenomenal Tod', 'Sensational Tod'
-    ];
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     
-    const creators = [
-        'TodMaster', 'ArtistPro', 'CreativeGenius', 'TodWizard',
-        'DrawingKing', 'PaintQueen', 'PixelPerfect', 'ColorMaster'
-    ];
+    <!-- Firebase Setup -->
+    <script src="firebase-setup.js"></script>
     
-    const tods = [];
-    for (let i = 0; i < 20; i++) {
-        tods.push({
-            id: `top-${i}`,
-            name: names[i],
-            creator: creators[Math.floor(Math.random() * creators.length)],
-            imageUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSIjZTc0YzNjIi8+CjxjaXJjbGUgY3g9IjcwIiBjeT0iODAiIHI9IjE1IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIxMzAiIGN5PSI4MCIgcj0iMTUiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik02MCAxMjAgUTEwMCAxNDAgMTQwIDEyMCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIi8+CjxwYXRoIGQ9Ik04NSA2MCBMOTAgNTUgTDg1IDUwIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTExNSA2MCBMMTEwIDU1IEwxMTUgNTAiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4=',
-            upvotes: 1000 - (i * 45) + Math.floor(Math.random() * 20),
-            createdAt: new Date(Date.now() - Math.random() * 3600000 * 24 * 30).toISOString()
-        });
-    }
-    
-    return tods;
-}
+    <!-- Hall of Tods App -->
+    <script src="hall-of-tods.js"></script>
+</body>
+</html>-
