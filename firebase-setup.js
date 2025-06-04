@@ -18,7 +18,7 @@ firebase.initializeApp(firebaseConfig);
 
 // Initialize Firebase services
 const db = firebase.firestore();
-const storage = firebase.storage();
+const storage = firebase.app().storage("gs://todd-fc21e.firebasestorage.app");
 const auth = firebase.auth();
 
 // Enable anonymous auth
