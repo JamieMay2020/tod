@@ -253,12 +253,12 @@ function redrawCanvas() {
 }
 
 // Complete Tod
-function completeTod() {
-    // Check rate limit
-    if (!checkRateLimit()) {
+    const allowed = await checkRateLimit();
+    if (!allowed) {
         showRateLimitWarning();
         return;
     }
+
     
     document.getElementById('completionModal').classList.add('active');
     document.getElementById('todName').focus();
@@ -287,35 +287,40 @@ function setupModals() {
 // Submit Tod
 async function submitTod() {
     const todName = document.getElementById('todName').value.trim();
+    const submitBtn = document.getElementById('submitBtn');
     
     if (!todName) {
         alert('Please give your Tod a name!');
         return;
     }
-    
-    // Convert canvas to blob
+
+    submitBtn.disabled = true;
+
+    const allowed = await checkRateLimit();
+    if (!allowed) {
+        showRateLimitWarning();
+        submitBtn.disabled = false;
+        return;
+    }
+
     canvas.toBlob(async (blob) => {
         try {
-            // Use Firebase function to create Tod
             const result = await createTod(blob, todName, selectedBase);
-            
+
             if (result.success) {
-                // Track for rate limiting
                 createdTods.push(Date.now());
-                
-                // Reset
                 document.getElementById('completionModal').classList.remove('active');
                 document.getElementById('todName').value = '';
-                
-                // Show success and redirect
                 alert('Your Tod has been created successfully!');
                 window.location.href = 'new-tods.html';
             } else {
                 alert('Failed to create Tod. Please try again.');
+                submitBtn.disabled = false;
             }
         } catch (error) {
             console.error('Error submitting Tod:', error);
             alert('Error creating Tod. Please check your connection.');
+            submitBtn.disabled = false;
         }
     });
 }
