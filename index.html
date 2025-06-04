@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life of Tod - Create Your Tod</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-bar-text">Life of Tod - Create Your Tod</div>
+            <div class="title-bar-controls">
+                <button class="title-bar-button" aria-label="Minimize">_</button>
+                <button class="title-bar-button" aria-label="Maximize">□</button>
+                <button class="title-bar-button close" aria-label="Close">×</button>
+            </div>
+        </div>
+
+        <div class="menu-bar">
+            <div class="menu-item">File</div>
+            <div class="menu-item">Edit</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Image</div>
+            <div class="menu-item">Colors</div>
+            <div class="menu-item">Help</div>
+        </div>
+
+        <nav class="nav-bar">
+            <a href="index.html" class="nav-button active">Create Tod</a>
+            <a href="new-tods.html" class="nav-button">New Tods</a>
+            <a href="hall-of-tods.html" class="nav-button">Hall of Tods</a>
+            <div class="nav-separator"></div>
+            <a href="https://x.com" target="_blank" class="nav-button">X.com</a>
+            <a href="https://pump.fun" target="_blank" class="nav-button">Pump.fun</a>
+        </nav>
+
+        <div class="window-body">
+            <!-- Base Selection Modal -->
+            <div id="baseSelectionModal" class="modal-window active">
+                <div class="modal-title-bar">
+                    <div class="title-bar-text">Choose Your Tod Base</div>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-text">Select a Tod to draw on:</p>
+                    <div class="base-options">
+                        <div class="base-option" data-base="blue">
+                            <img src="tod-blue.png" alt="Blue Tod" class="base-preview">
+                            <p>Blue Tod</p>
+                        </div>
+                        <div class="base-option" data-base="red">
+                            <img src="tod-red.png" alt="Red Tod" class="base-preview">
+                            <p>Red Tod</p>
+                        </div>
+                        <div class="base-option" data-base="green">
+                            <img src="tod-green.png" alt="Green Tod" class="base-preview">
+                            <p>Green Tod</p>
+                        </div>
+                        <div class="base-option" data-base="yellow">
+                            <img src="tod-yellow.png" alt="Yellow Tod" class="base-preview">
+                            <p>Yellow Tod</p>
+                        </div>
+                        <div class="base-option" data-base="purple">
+                            <img src="tod-purple.png" alt="Purple Tod" class="base-preview">
+                            <p>Purple Tod</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drawing Interface -->
+            <div id="drawingInterface" class="paint-interface hidden">
+                <div class="toolbox">
+                    <div class="tool-section">
+                        <div class="tool-row">
+                            <button class="tool-button" id="pencilTool" title="Pencil">
+                                <span class="tool-icon">✏️</span>
+                            </button>
+                            <button class="tool-button" id="brushTool" title="Brush">
+                                <span class="tool-icon">🖌️</span>
+                            </button>
+                        </div>
+                        <div class="tool-row">
+                            <button class="tool-button" id="undoBtn" title="Undo">
+                                <span class="tool-icon">↶</span>
+                            </button>
+                            <button class="tool-button" id="clearBtn" title="Clear">
+                                <span class="tool-icon">🗑️</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="separator"></div>
+                    
+                    <div class="tool-section">
+                        <label class="tool-label">Size:</label>
+                        <select id="brushSize" class="classic-select">
+                            <option value="1">1px</option>
+                            <option value="2">2px</option>
+                            <option value="3">3px</option>
+                            <option value="5" selected>5px</option>
+                            <option value="8">8px</option>
+                            <option value="12">12px</option>
+                            <option value="16">16px</option>
+                            <option value="20">20px</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="main-area">
+                    <div class="canvas-scroll">
+                        <canvas id="drawingCanvas"></canvas>
+                    </div>
+                    
+                    <div class="color-palette">
+                        <div class="palette-label">Colors</div>
+                        <div class="color-grid">
+                            <div class="color-box" style="background-color: #000000" data-color="#000000"></div>
+                            <div class="color-box" style="background-color: #464646" data-color="#464646"></div>
+                            <div class="color-box" style="background-color: #787878" data-color="#787878"></div>
+                            <div class="color-box" style="background-color: #990030" data-color="#990030"></div>
+                            <div class="color-box" style="background-color: #9C5A3C" data-color="#9C5A3C"></div>
+                            <div class="color-box" style="background-color: #ED1C24" data-color="#ED1C24"></div>
+                            <div class="color-box" style="background-color: #FF7E00" data-color="#FF7E00"></div>
+                            <div class="color-box" style="background-color: #FFC20E" data-color="#FFC20E"></div>
+                            <div class="color-box" style="background-color: #FFF200" data-color="#FFF200"></div>
+                            <div class="color-box" style="background-color: #FFFFFF" data-color="#FFFFFF"></div>
+                            <div class="color-box" style="background-color: #C8C8C8" data-color="#C8C8C8"></div>
+                            <div class="color-box" style="background-color: #B97A57" data-color="#B97A57"></div>
+                            <div class="color-box" style="background-color: #FFAEC8" data-color="#FFAEC8"></div>
+                            <div class="color-box" style="background-color: #FFA3B1" data-color="#FFA3B1"></div>
+                            <div class="color-box" style="background-color: #E8388C" data-color="#E8388C"></div>
+                            <div class="color-box" style="background-color: #E81E68" data-color="#E81E68"></div>
+                            <div class="color-box" style="background-color: #B72467" data-color="#B72467"></div>
+                            <div class="color-box" style="background-color: #4B0049" data-color="#4B0049"></div>
+                            <div class="color-box" style="background-color: #003C96" data-color="#003C96"></div>
+                            <div class="color-box" style="background-color: #0066FF" data-color="#0066FF"></div>
+                            <div class="color-box" style="background-color: #00B4D8" data-color="#00B4D8"></div>
+                            <div class="color-box" style="background-color: #00D8CC" data-color="#00D8CC"></div>
+                            <div class="color-box" style="background-color: #B5E61D" data-color="#B5E61D"></div>
+                            <div class="color-box" style="background-color: #00B800" data-color="#00B800"></div>
+                            <div class="color-box" style="background-color: #008F00" data-color="#008F00"></div>
+                            <div class="color-box" style="background-color: #005824" data-color="#005824"></div>
+                            <div class="color-box" style="background-color: #D3A6C8" data-color="#D3A6C8"></div>
+                            <div class="color-box" style="background-color: #8B008B" data-color="#8B008B"></div>
+                        </div>
+                        <div class="current-colors">
+                            <div id="currentColor" class="current-color-display"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-bar">
+                    <div class="status-section">
+                        <button id="completeBtn" class="classic-button">Complete Tod</button>
+                    </div>
+                    <div class="status-section">
+                        <span id="coordinates">0, 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Modal -->
+            <div id="completionModal" class="modal-window">
+                <div class="modal-title-bar">
+                    <div class="title-bar-text">Name Your Tod</div>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-text">Enter a name for your Tod:</p>
+                    <input type="text" id="todName" class="classic-input" maxlength="50">
+                    <div class="modal-buttons">
+                        <button id="submitBtn" class="classic-button">OK</button>
+                        <button id="cancelBtn" class="classic-button">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rate Limit Warning -->
+            <div id="rateLimitWarning" class="error-window hidden">
+                <div class="modal-title-bar">
+                    <div class="title-bar-text">⚠️ Rate Limit</div>
+                </div>
+                <div class="modal-body">
+                    <p>You can only create 3 Tods per minute.</p>
+                    <p>Please wait <span id="cooldownTime"></span> seconds.</p>
+                    <button class="classic-button" onclick="this.parentElement.parentElement.classList.add('hidden')">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    
+    <!-- Firebase Setup -->
+    <script src="firebase-setup.js"></script>
+    
+    <!-- Drawing App -->
+    <script src="drawing.js"></script>
+</body>
+</html>

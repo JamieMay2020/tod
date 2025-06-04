@@ -1,0 +1,596 @@
+/* Windows XP MS Paint Style CSS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Tahoma', 'Segoe UI', sans-serif;
+    font-size: 11px;
+    background-color: #3A6EA5;
+    background-image: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.05) 2px,
+            rgba(255, 255, 255, 0.05) 4px
+        );
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Window Styles */
+.window {
+    background-color: #ECE9D8;
+    border: 2px solid #0054E3;
+    box-shadow: 
+        inset -1px -1px #00138C,
+        inset 1px 1px #FFFFFF,
+        2px 2px 5px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 1000px;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Title Bar */
+.title-bar {
+    background: linear-gradient(to bottom, #0058E6, #1674FF);
+    color: white;
+    padding: 3px 3px 3px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.title-bar-text {
+    flex: 1;
+    user-select: none;
+}
+
+.title-bar-controls {
+    display: flex;
+    gap: 2px;
+}
+
+.title-bar-button {
+    width: 21px;
+    height: 21px;
+    border: 1px solid white;
+    background: linear-gradient(to bottom, #FFFFFF, #B4C7DC);
+    color: black;
+    font-weight: bold;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    box-shadow: inset -1px -1px #8A9EA8;
+}
+
+.title-bar-button:hover {
+    background: linear-gradient(to bottom, #E5F1FB, #C4D7ED);
+}
+
+.title-bar-button:active {
+    background: linear-gradient(to bottom, #C4D7ED, #E5F1FB);
+    box-shadow: inset 1px 1px #8A9EA8;
+}
+
+.title-bar-button.close {
+    background: linear-gradient(to bottom, #FFB0B0, #FF6B6B);
+}
+
+.title-bar-button.close:hover {
+    background: linear-gradient(to bottom, #FF9999, #FF4444);
+}
+
+/* Menu Bar */
+.menu-bar {
+    background-color: #ECE9D8;
+    border-bottom: 1px solid #FFFFFF;
+    display: flex;
+    padding: 2px 2px;
+}
+
+.menu-item {
+    padding: 4px 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.menu-item:hover {
+    background-color: #316AC5;
+    color: white;
+}
+
+/* Navigation Bar */
+.nav-bar {
+    background-color: #D4D0C8;
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #808080;
+    padding: 4px;
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.nav-button {
+    background: linear-gradient(to bottom, #FFFFFF, #ECE9D8);
+    border: 1px solid #8B8680;
+    box-shadow: inset -1px -1px #716F64, inset 1px 1px #FFFFFF;
+    padding: 4px 12px;
+    text-decoration: none;
+    color: black;
+    font-size: 11px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-button:hover {
+    background: linear-gradient(to bottom, #F5F5F5, #E0DDD5);
+}
+
+.nav-button:active,
+.nav-button.active {
+    background: linear-gradient(to bottom, #D8D5CD, #CECAB8);
+    box-shadow: inset 1px 1px #716F64, inset -1px -1px #FFFFFF;
+}
+
+.nav-separator {
+    width: 1px;
+    height: 20px;
+    background-color: #808080;
+    margin: 0 4px;
+}
+
+/* Window Body */
+.window-body {
+    flex: 1;
+    padding: 4px;
+    background-color: #D4D0C8;
+    position: relative;
+}
+
+/* Modal Windows */
+.modal-window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ECE9D8;
+    border: 2px solid #0054E3;
+    box-shadow: 
+        inset -1px -1px #00138C,
+        inset 1px 1px #FFFFFF,
+        2px 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    min-width: 400px;
+}
+
+.modal-window.active {
+    display: block;
+}
+
+.modal-title-bar {
+    background: linear-gradient(to bottom, #0058E6, #1674FF);
+    color: white;
+    padding: 2px 4px;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.modal-body {
+    padding: 16px;
+}
+
+.modal-text {
+    margin-bottom: 12px;
+}
+
+/* Base Selection */
+.base-options {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.base-option {
+    text-align: center;
+    cursor: pointer;
+    padding: 8px;
+    border: 2px solid transparent;
+}
+
+.base-option:hover {
+    border: 2px dotted #000000;
+    background-color: #E8E8E8;
+}
+
+.base-preview {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #808080;
+    box-shadow: inset -1px -1px #DFDFDF, inset 1px 1px #000000;
+    margin-bottom: 4px;
+}
+
+/* Paint Interface */
+.paint-interface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Toolbox */
+.toolbox {
+    background-color: #D4D0C8;
+    border: 1px solid #FFFFFF;
+    box-shadow: inset -1px -1px #808080;
+    padding: 4px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.tool-section {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.tool-row {
+    display: flex;
+    gap: 2px;
+}
+
+.tool-button {
+    width: 25px;
+    height: 25px;
+    background: linear-gradient(to bottom, #FFFFFF, #ECE9D8);
+    border: 1px solid #8B8680;
+    box-shadow: inset -1px -1px #716F64, inset 1px 1px #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.tool-button:hover {
+    background: linear-gradient(to bottom, #F5F5F5, #E0DDD5);
+}
+
+.tool-button:active,
+.tool-button.active {
+    background: linear-gradient(to bottom, #D8D5CD, #CECAB8);
+    box-shadow: inset 1px 1px #716F64, inset -1px -1px #FFFFFF;
+}
+
+.separator {
+    width: 1px;
+    height: 30px;
+    background-color: #808080;
+}
+
+.tool-label {
+    font-size: 11px;
+    margin-right: 4px;
+}
+
+.classic-select {
+    background: white;
+    border: 1px solid #7F9DB9;
+    box-shadow: inset -1px -1px #FFFFFF, inset 1px 1px #404040;
+    padding: 2px;
+    font-size: 11px;
+    font-family: 'Tahoma', sans-serif;
+}
+
+/* Main Area */
+.main-area {
+    flex: 1;
+    display: flex;
+    gap: 4px;
+    padding: 4px 0;
+}
+
+/* Canvas */
+.canvas-scroll {
+    flex: 1;
+    background-color: #808080;
+    border: 1px solid #000000;
+    box-shadow: inset -1px -1px #DFDFDF, inset 1px 1px #000000;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#drawingCanvas {
+    background-color: white;
+    border: 1px solid #000000;
+    cursor: crosshair;
+    display: block;
+}
+
+/* Color Palette */
+.color-palette {
+    width: 60px;
+    background-color: #D4D0C8;
+    border: 1px solid #FFFFFF;
+    box-shadow: inset -1px -1px #808080;
+    padding: 4px;
+}
+
+.palette-label {
+    text-align: center;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+}
+
+.color-box {
+    width: 22px;
+    height: 22px;
+    border: 1px solid #000000;
+    box-shadow: inset -1px -1px #808080, inset 1px 1px #FFFFFF;
+    cursor: pointer;
+}
+
+.color-box:hover {
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 0 0 1px #000000;
+}
+
+.color-box.selected {
+    border: 2px solid #000000;
+    box-shadow: inset -2px -2px #404040, inset 2px 2px #FFFFFF;
+}
+
+.current-colors {
+    margin-top: 8px;
+    text-align: center;
+}
+
+.current-color-display {
+    width: 48px;
+    height: 24px;
+    border: 1px solid #000000;
+    box-shadow: inset -1px -1px #808080, inset 1px 1px #FFFFFF;
+    background-color: #000000;
+    margin: 0 auto;
+}
+
+/* Status Bar */
+.status-bar {
+    background-color: #D4D0C8;
+    border-top: 1px solid #FFFFFF;
+    padding: 2px 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Buttons */
+.classic-button {
+    background: linear-gradient(to bottom, #FFFFFF, #ECE9D8);
+    border: 1px solid #003C74;
+    box-shadow: inset -1px -1px #716F64, inset 1px 1px #FFFFFF;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-family: 'Tahoma', sans-serif;
+    cursor: pointer;
+    min-width: 75px;
+}
+
+.classic-button:hover {
+    background: linear-gradient(to bottom, #F5F5F5, #E0DDD5);
+}
+
+.classic-button:active {
+    background: linear-gradient(to bottom, #D8D5CD, #CECAB8);
+    box-shadow: inset 1px 1px #716F64, inset -1px -1px #FFFFFF;
+}
+
+/* Input */
+.classic-input {
+    width: 100%;
+    padding: 2px 4px;
+    border: 1px solid #7F9DB9;
+    box-shadow: inset -1px -1px #FFFFFF, inset 1px 1px #404040;
+    background: white;
+    font-family: 'Tahoma', sans-serif;
+    font-size: 11px;
+    margin: 8px 0;
+}
+
+/* Modal Buttons */
+.modal-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+/* Error Window */
+.error-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ECE9D8;
+    border: 2px solid #0054E3;
+    box-shadow: 
+        inset -1px -1px #00138C,
+        inset 1px 1px #FFFFFF,
+        4px 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    min-width: 300px;
+}
+
+/* Tods Gallery Pages */
+.page-container {
+    background-color: #ECE9D8;
+    min-height: calc(100vh - 200px);
+    padding: 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.page-header h2 {
+    font-size: 18px;
+    color: #003C74;
+    margin-bottom: 4px;
+}
+
+.tods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.tod-card {
+    background-color: #FFFFFF;
+    border: 2px solid #7F9DB9;
+    box-shadow: inset -1px -1px #FFFFFF, inset 1px 1px #404040;
+    padding: 8px;
+}
+
+.tod-image {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+    border: 1px solid #808080;
+    background-color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.tod-info {
+    border-top: 1px solid #D4D0C8;
+    padding-top: 8px;
+}
+
+.tod-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tod-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: #666666;
+}
+
+.upvote-btn {
+    background: linear-gradient(to bottom, #FFFFFF, #ECE9D8);
+    border: 1px solid #8B8680;
+    padding: 2px 8px;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.upvote-btn:hover {
+    background: linear-gradient(to bottom, #F5F5F5, #E0DDD5);
+}
+
+.upvote-btn.upvoted {
+    background: linear-gradient(to bottom, #FFE4E4, #FFB0B0);
+    border-color: #FF0000;
+}
+
+/* Hall of Fame Ranks */
+.rank-badge {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(to bottom, #FFF200, #FFC20E);
+    border: 2px solid #B8860B;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.rank-badge.gold {
+    background: linear-gradient(to bottom, #FFF200, #FFD700);
+    border-color: #B8860B;
+}
+
+.rank-badge.silver {
+    background: linear-gradient(to bottom, #FFFFFF, #C0C0C0);
+    border-color: #808080;
+}
+
+.rank-badge.bronze {
+    background: linear-gradient(to bottom, #FFE4B5, #CD853F);
+    border-color: #8B4513;
+}
+
+/* Utility */
+.hidden {
+    display: none !important;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .window {
+        margin: 0;
+        border: none;
+        box-shadow: none;
+    }
+    
+    .nav-bar {
+        flex-wrap: wrap;
+    }
+    
+    .modal-window {
+        min-width: 90%;
+    }
+}

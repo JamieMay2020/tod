@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life of Tod - Hall of Tods</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-bar-text">Life of Tod - Hall of Tods</div>
+            <div class="title-bar-controls">
+                <button class="title-bar-button" aria-label="Minimize">_</button>
+                <button class="title-bar-button" aria-label="Maximize">□</button>
+                <button class="title-bar-button close" aria-label="Close">×</button>
+            </div>
+        </div>
+
+        <div class="menu-bar">
+            <div class="menu-item">File</div>
+            <div class="menu-item">Edit</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Image</div>
+            <div class="menu-item">Colors</div>
+            <div class="menu-item">Help</div>
+        </div>
+
+        <nav class="nav-bar">
+            <a href="index.html" class="nav-button">Create Tod</a>
+            <a href="new-tods.html" class="nav-button">New Tods</a>
+            <a href="hall-of-tods.html" class="nav-button active">Hall of Tods</a>
+            <div class="nav-separator"></div>
+            <a href="https://x.com" target="_blank" class="nav-button">X.com</a>
+            <a href="https://pump.fun" target="_blank" class="nav-button">Pump.fun</a>
+        </nav>
+
+        <div class="window-body">
+            <div class="page-container">
+                <div class="page-header">
+                    <h2>Hall of Tods</h2>
+                    <p>The most beloved Tods of all time!</p>
+                </div>
+
+                <div id="topTodsGrid" class="tods-grid hall-grid">
+                    <!-- Top 20 Tods will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    
+    <!-- Firebase Setup -->
+    <script src="firebase-setup.js"></script>
+    
+    <!-- Hall of Tods App -->
+    <script src="hall-of-tods.js"></script>
+</body>
+</html>-
